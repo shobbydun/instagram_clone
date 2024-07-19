@@ -23,11 +23,12 @@ To run the Instagram Clone App on Android Studio, first ensure you have the Flut
 
 # Screenshots
 
+![5821010361166447813](https://github.com/user-attachments/assets/2dbde358-01ea-410d-b67a-942f198ff84d)
+
 ![5821010361166447798](https://github.com/user-attachments/assets/9a0a07d9-5540-4aed-8802-eb69e6ba787e)
 
 ![5821010361166447814](https://github.com/user-attachments/assets/2b101e22-bc4f-4af6-830a-6d0c84ff0ff8)
 
-![5821010361166447813](https://github.com/user-attachments/assets/2dbde358-01ea-410d-b67a-942f198ff84d)
 ![5821010361166447807](https://github.com/user-attachments/assets/ec254151-5cb1-4246-9e40-915a7bca2b56)
 
 ![5821010361166447797](https://github.com/user-attachments/assets/e3fd0bd6-342b-4075-af42-9007a30760dd)
