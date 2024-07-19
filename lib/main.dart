@@ -12,32 +12,32 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // initialise app based on platform- web or mobile
   if (kIsWeb) {
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
-      apiKey: 'AIzaSyCRXbDewKuUgiERKj15O2P6HPnDI3E3XG0',
-      appId: '1:697020894700:web:fdabca6651a8c909b804c9',
-      messagingSenderId: '697020894700',
-      projectId: 'instagram-clone-2cc86',
-      storageBucket: 'instagram-clone-2cc86.appspot.com',
-    ));
+      options: const FirebaseOptions(
+        apiKey: "AIzaSyCZ-xrXqD5D19Snauto-Fx_nLD7PLrBXGM",
+        appId: "1:585119731880:web:eca6e4b3c42a755cee329d",
+        messagingSenderId: "585119731880",
+        projectId: "instagram-clone-4cea4",
+        storageBucket: 'instagram-clone-4cea4.appspot.com'
+      ),
+    );
   } else {
     await Firebase.initializeApp();
   }
-
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => UserProvider(),
-        ),
+        ChangeNotifierProvider(create: (_) => UserProvider(),),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -49,7 +49,9 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
+              // Checking if the snapshot has any data or not
               if (snapshot.hasData) {
+                // if snapshot has data which means user is logged in then we check the width of screen and accordingly display the screen layout
                 return const ResponsiveLayout(
                   mobileScreenLayout: MobileScreenLayout(),
                   webScreenLayout: WebScreenLayout(),
@@ -60,13 +62,13 @@ class MyApp extends StatelessWidget {
                 );
               }
             }
+
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                child: CircularProgressIndicator(
-                  color: primaryColor,
-                ),
+                child: CircularProgressIndicator(),
               );
             }
+
             return const LoginScreen();
           },
         ),

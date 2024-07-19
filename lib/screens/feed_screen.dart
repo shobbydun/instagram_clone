@@ -5,18 +5,24 @@ import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/global_variables.dart';
 import 'package:instagram_clone/widgets/post_card.dart';
 
-class FeedScreen extends StatelessWidget {
-  const FeedScreen({Key? key});
+class FeedScreen extends StatefulWidget {
+  const FeedScreen({Key? key}) : super(key: key);
 
   @override
+  State<FeedScreen> createState() => _FeedScreenState();
+}
+
+class _FeedScreenState extends State<FeedScreen> {
+  @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    bool isWebSize = screenWidth > webScreenSize;
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: isWebSize ? webBackgroundColor : mobileBackgroundColor,
-      appBar: !isWebSize
-          ? AppBar(
+      backgroundColor:
+          width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
+      appBar: width > webScreenSize
+          ? null
+          : AppBar(
               backgroundColor: mobileBackgroundColor,
               centerTitle: false,
               title: SvgPicture.asset(
@@ -26,15 +32,18 @@ class FeedScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
+                  icon: const Icon(
+                    Icons.messenger_outline,
+                    color: primaryColor,
+                  ),
                   onPressed: () {},
-                  icon: const Icon(Icons.message),
                 ),
               ],
-            )
-          : null,
+            ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -42,18 +51,15 @@ class FeedScreen extends StatelessWidget {
           }
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              var post = snapshot.data!.docs[index].data();
-              return Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: isWebSize ? screenWidth * 0.3 : 0,
-                  vertical: isWebSize ? 15 : 0,
-                ),
-                child: PostCard(
-                  snap: post,
-                ),
-              );
-            },
+            itemBuilder: (ctx, index) => Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: width > webScreenSize ? width * 0.3 : 0,
+                vertical: width > webScreenSize ? 15 : 0,
+              ),
+              child: PostCard(
+                snap: snapshot.data!.docs[index].data(),
+              ),
+            ),
           );
         },
       ),

@@ -23,14 +23,21 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
-  late User user; // Define user variable
+  User? user; // Declare user as nullable
   int commentLen = 0;
 
   @override
   void initState() {
     super.initState();
-    user = Provider.of<UserProvider>(context, listen: false).getUser;
+    _initUser();
     getComments();
+  }
+
+  void _initUser() {
+    user = Provider.of<UserProvider>(context, listen: false).getUser;
+    if (user == null) {
+      
+    }
   }
 
   void getComments() async {
@@ -116,7 +123,8 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         InkWell(
                           onTap: () async {
-                            await FirestoreMethods().deletePost(widget.snap?['postId']);
+                            await FirestoreMethods()
+                                .deletePost(widget.snap?['postId']);
                             Navigator.of(context).pop();
                           },
                           child: Container(
@@ -184,11 +192,11 @@ class _PostCardState extends State<PostCard> {
   Widget _buildInteractionRow(BuildContext context) {
     if (widget.snap == null ||
         widget.snap!['likes'] == null ||
-        user.uid == null) {
+        user?.uid == null) {
       return Container(); // Or handle loading state or placeholder
     }
 
-    bool isLikedByUser = widget.snap!['likes'].contains(user.uid);
+    bool isLikedByUser = widget.snap!['likes'].contains(user!.uid);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -260,7 +268,7 @@ class _PostCardState extends State<PostCard> {
           const SizedBox(height: 4),
           RichText(
             text: TextSpan(
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.white),
               children: [
                 TextSpan(
                   text: widget.snap!['username'],
@@ -309,7 +317,7 @@ class _PostCardState extends State<PostCard> {
     // Call Firestore method to handle liking the post
     await FirestoreMethods().likePost(
       widget.snap?['postId'],
-      user.uid,
+      user!.uid,
       widget.snap?['likes'],
     );
     if (mounted) {

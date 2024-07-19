@@ -8,15 +8,19 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<model.User?> getUserDetails() async{
-    User currentUser = _auth.currentUser!;
+  Future<model.User?> getUserDetails() async {
+    User? currentUser = _auth.currentUser;
 
-    DocumentSnapshot snap = await _firestore.collection('users').doc(currentUser.uid).get();
+    if (currentUser == null) {
+      return null; // Handle the case where user is not authenticated
+    }
 
-    return model.User.fromSnap(snap);
+    DocumentSnapshot snap =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+
+    return model.User.fromSnapshot(snap);
   }
 
-  //sign up user
   Future<String> signUpUser({
     required String email,
     required String password,
@@ -71,7 +75,6 @@ class AuthMethods {
     return res;
   }
 
-  //logging user
   Future<String> loginUser({
     required String email,
     required String password,
@@ -92,7 +95,6 @@ class AuthMethods {
     return res;
   }
 
-  //signout method
   Future<void> signout() async {
     await _auth.signOut();
   }
